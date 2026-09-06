@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+body {
+  @apply bg-ink-950 text-paper font-body antialiased;
+}
+
+::selection {
+  @apply bg-spectrum-magenta/40 text-white;
+}
+
+/* Visible focus ring everywhere, including custom components */
+:focus-visible {
+  outline: 2px solid #F2569B;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.light body {
+  @apply bg-paper text-ink-950;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #252A3B;
+  border-radius: 999px;
+}
+
+@layer components {
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 text-sm font-medium px-4 py-2.5 rounded-xl bg-ink-800 hover:bg-ink-700 transition-colors;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 text-sm font-semibold px-5 py-2.5 rounded-xl bg-spectrum-fan text-ink-950 hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .input-field {
+    @apply w-full rounded-xl bg-ink-900 border border-ink-700 px-4 py-3 text-sm text-paper placeholder:text-paper/40 focus:border-spectrum-magenta outline-none transition-colors;
+  }
+}
