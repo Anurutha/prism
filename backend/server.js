@@ -20,12 +20,14 @@ app.use(helmet());
 app.use(express.json({ limit: '1mb' }));
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
-const allowedOrigins = (
-  process.env.FRONTEND_URL || 'http://localhost:5173'
-)
-  .split(',')
-  .map((origin) => origin.trim())
-  .filter(Boolean);
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://prism-ai-snowy.vercel.app',
+  ...(process.env.FRONTEND_URL || '')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean),
+].filter((origin, index, origins) => origins.indexOf(origin) === index);
 
 const corsOptions = {
   origin: (origin, callback) => {
@@ -33,7 +35,7 @@ const corsOptions = {
       return callback(null, true);
     }
 
-    callback(new Error(`Not allowed by CORS: ${origin}`));
+    return callback(new Error(`Not allowed by CORS: ${origin}`));
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -41,6 +43,8 @@ const corsOptions = {
   optionsSuccessStatus: 204,
 };
 
+// Handle browser CORS preflight requests explicitly. This is important when
+// the Express app is running as a Vercel serverless function.
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 
